@@ -29,7 +29,7 @@ import {
   lowerCase,
   pick
 } from '../lib/util'
-import { isErudaEl } from '../lib/extraUtil'
+import { isErudaEl,genHideElementRule } from '../lib/extraUtil'
 import evalCss from '../lib/evalCss'
 
 export default class Elements extends Tool {
@@ -138,6 +138,7 @@ export default class Elements extends Tool {
 
     this.set(parent)
   }
+
   _bindEvent() {
     const self = this
     const container = this._container
@@ -145,6 +146,7 @@ export default class Elements extends Tool {
 
     this._$el
       .on('click', '.eruda-child', function() {
+
         const idx = $(this).data('idx')
         const curEl = self._curEl
         const el = curEl.childNodes[idx]
@@ -175,6 +177,8 @@ export default class Elements extends Tool {
         }
 
         !isElExist(el) ? self._render() : self.set(el)
+
+
       })
       .on('click', '.eruda-listener-content', function() {
         const text = $(this).text()
@@ -184,14 +188,59 @@ export default class Elements extends Tool {
           sources.set('js', text)
           container.showTool('sources')
         }
+        alert('ok-click listener content');
       })
       .on('click', '.eruda-breadcrumb', () => {
+        /*
         const sources = container.get('sources')
 
         if (sources) {
           sources.set('object', this._curEl)
           container.showTool('sources')
+        }*/
+        const dom = container.get('dom');
+        const _current_ = this._curEl;
+        if(dom) {
+          container.showTool('dom');
+          dom.select(this._curEl);
+          setTimeout(function(){ dom.select(_current_); },200);
+
         }
+      })
+      .on('click','.eruda-show-element-html',function () {
+          const curEl = self._curEl;
+          if(curEl) {
+              alert(curEl.outerHTML);
+          }
+
+
+      })
+      .on('click','.eruda-copy-element-html',function () {
+          const curEl = self._curEl;
+          if(curEl) {
+              if(window.mbrowser) {
+                  window.mbrowser.copyToClipboard(curEl.outerHTML) ;
+              } else {
+                  alert(curEl.outerHTML);
+              }
+
+          }
+
+
+      })
+      .on('click','.eruda-copy-hide-element-rule',function () {
+          const curEl = self._curEl;
+          if(curEl) {
+              var rule = genHideElementRule(curEl);
+              if(window.mbrowser) {
+                  window.mbrowser.copyToClipboard(rule) ;
+              } else {
+                  alert(rule);
+              }
+
+
+          }
+
       })
       .on('click', '.eruda-parent', function() {
         let idx = $(this).data('idx')
@@ -291,6 +340,7 @@ export default class Elements extends Tool {
     ret.children = formatChildNodes(el.childNodes)
     ret.attributes = formatAttr(attributes)
     ret.name = formatElName({ tagName, id, className, attributes })
+    ret.ruleText = genHideElementRule(this._curEl)
 
     const events = el.erudaEvents
     if (events && keys(events).length !== 0) ret.listeners = events
@@ -467,6 +517,8 @@ function processStyleRule(val) {
 }
 
 const isElExist = val => isEl(val) && val.parentNode
+
+
 
 function formatElName(data, { noAttr = false } = {}) {
   const { id, className, attributes } = data

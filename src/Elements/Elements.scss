@@ -112,6 +112,8 @@
       @include overflow-auto(x);
       padding: $padding;
     }
+    padding: $padding;
+    word-wrap: break-word;
   }
   .style-color {
     position: relative;
