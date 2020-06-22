@@ -22,6 +22,18 @@ export function isErudaEl(el) {
   return false
 }
 
+function getTop(e){
+    var offset=e.offsetTop;
+    if(e.offsetParent!=null) offset+=getTop(e.offsetParent);
+    return offset;
+}
+
+/* 获取元素相对于浏览器的left */
+function getLeft(e){
+    var offset=e.offsetLeft;
+    if(e.offsetParent!=null) offset+=getLeft(e.offsetParent);
+    return offset;
+}
 
 
 export function genHideElementRule(el) {
@@ -88,7 +100,7 @@ export function genHideElementRule(el) {
 
     var elements = document.querySelectorAll(selector);
     if(elements.length > 1) {
-       extra = '!' + el.offsetWidth + ',' + el.offsetHeight;
+       extra = '!' + getLeft(el)+ ':' + getTop(el);
     }
 
     if(host) {
