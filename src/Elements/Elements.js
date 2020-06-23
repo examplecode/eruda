@@ -203,7 +203,7 @@ export default class Elements extends Tool {
         if(dom) {
           container.showTool('dom');
           dom.select(this._curEl);
-          setTimeout(function(){ dom.select(_current_); },200);
+          setTimeout(function(){ dom.select(_current_); },300);
 
         }
       })
