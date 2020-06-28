@@ -61,6 +61,10 @@ export function genHideElementRule(el) {
         continue;
       }
 
+      if(name == 'id') {
+          continue;
+      }
+
       if(!value) {
           hasVaule = false;
       }
@@ -100,7 +104,7 @@ export function genHideElementRule(el) {
 
     var elements = document.querySelectorAll(selector);
     if(elements.length > 1) {
-       extra = '!' + getLeft(el)+ ':' + getTop(el);
+       extra = '%' + getLeft(el)+ ':' + getTop(el) + ':' + el.offsetWidth + ':' + el.offsetHeight;
     }
 
     if(host) {
